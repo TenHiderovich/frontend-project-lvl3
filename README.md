@@ -1,5 +1,6 @@
-gendiff-hiderovich
+RSS-hiderovich
 =========================
+https://frontend-project-lvl3-vert-five.vercel.app
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/TenHiderovich/frontend-project-lvl3/workflows/hexlet-check/badge.svg)](https://github.com/TenHiderovich/frontend-project-lvl3/actions)
