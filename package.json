@@ -4,9 +4,8 @@
   "description": "[![Actions Status](https://github.com/TenHiderovich/frontend-project-lvl3/workflows/hexlet-check/badge.svg)](https://github.com/TenHiderovich/frontend-project-lvl3/actions)",
   "main": "index.js",
   "scripts": {
-    "test": "npx -n --experimental-vm-modules jest",
-    "build": "cross-env NODE_ENV=production & babel src --out-dir dist --source-maps inline",
-    "prepublishOnly": "npm run build"
+    "test": "jest",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -37,7 +36,8 @@
     "sass": "^1.32.11",
     "sass-loader": "^11.0.1",
     "style-loader": "^2.0.0",
-    "webpack": "^5.35.1"
+    "webpack": "^5.35.1",
+    "webpack-cli": "^4.6.0"
   },
   "dependencies": {
     "bootstrap": "^5.0.0-beta3"

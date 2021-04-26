@@ -9,25 +9,12 @@ module.exports = {
   },
   module: {
     rules: [{
-      test: /\.(scss)$/,
-      use: [{
-        loader: 'style-loader',
-      }, {
-        loader: 'css-loader',
-      }, {
-        loader: 'postcss-loader',
-        options: {
-          plugins: function () {
-            return [
-              require('precss'),
-              require('autoprefixer')
-            ];
-          }
-        }
-      }, {
-        loader: 'sass-loader'
-      }]
-    }, ]
+      test: /\.css$/,
+      use: ['style-loader', 'css-loader']
+    }]
   },
-  plugins: [new HtmlWebpackPlugin()],
+  plugins: [new HtmlWebpackPlugin({
+    template: path.resolve(__dirname, 'src', 'index.html'),
+    inject: 'body'
+  })],
 };
