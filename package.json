@@ -43,6 +43,9 @@
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
-    "bootstrap": "^5.0.0-beta3"
+    "bootstrap": "^5.0.0-beta3",
+    "lodash": "^4.17.21",
+    "on-change": "^3.0.2",
+    "yup": "^0.32.9"
   }
 }
