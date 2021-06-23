@@ -2,6 +2,8 @@ import onChange from 'on-change';
 
 export default (state, processHandler, renderError) => onChange(state, (path, value) => {
   const feedback = document.querySelector('.feedback');
+  const form = document.querySelector('.rss-form');
+
   switch (path) {
     case 'searchForm.process':
       processHandler(value);
@@ -13,8 +15,11 @@ export default (state, processHandler, renderError) => onChange(state, (path, va
       if (value) {
         feedback.innerHTML = '';
         feedback.classList.remove('text-danger');
-      } else {
-        feedback.classList.add('text-danger');
+      }
+      break;
+    case 'searchForm.data.url':
+      if (value === '') {
+        form.reset();
       }
       break;
     default:

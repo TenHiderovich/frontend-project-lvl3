@@ -17,6 +17,7 @@ const renderError = (errors) => {
     hasUrl: 'RSS уже существует',
   };
   feedback.innerHTML = errorTexts[keys[0]];
+  feedback.classList.add('text-danger');
 };
 
 export default () => {
@@ -72,9 +73,7 @@ export default () => {
     watchedState.searchForm.valid = _.isEqual(errors, {}) && !hasUrl;
 
     if (hasUrl) {
-      watchedState.searchForm.errors = {
-        hasUrl,
-      };
+      renderError({ hasUrl });
     }
 
     if (!watchedState.searchForm.valid) {
