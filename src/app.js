@@ -14,12 +14,14 @@ const renderError = (errors) => {
   const errorTexts = {
     url: 'Ссылка должна быть валидным URL',
     rss: 'Ресурс не содержит валидный RSS',
+    hasUrl: 'RSS уже существует',
   };
   feedback.innerHTML = errorTexts[keys[0]];
 };
 
 export default () => {
   const state = {
+    urls: [],
     searchForm: {
       data: {
         url: '',
@@ -28,6 +30,7 @@ export default () => {
       errors: {},
       process: 'filling',
     },
+    chanals: [],
   };
 
   const form = document.querySelector('.rss-form');
@@ -40,15 +43,13 @@ export default () => {
       case 'failded':
         buttonSubmit.disabled = false;
         break;
-      case 'filling':
-        buttonSubmit.disabled = false;
-        break;
       case 'sending':
         buttonSubmit.disabled = true;
         break;
       case 'finished':
         feedback.innerHTML = 'RSS успешно загружен';
         feedback.classList.add('text-success');
+        buttonSubmit.disabled = false;
         break;
       default:
         throw new Error(`Unknown state: ${processValue}`);
@@ -64,22 +65,31 @@ export default () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const errors = validate(state.searchForm.data);
+    const { url } = watchedState.searchForm.data;
+    const hasUrl = watchedState.urls.includes(url);
 
     watchedState.searchForm.errors = errors;
-    watchedState.searchForm.valid = _.isEqual(errors, {});
+    watchedState.searchForm.valid = _.isEqual(errors, {}) && !hasUrl;
 
-    if (!_.isEqual(errors, {})) {
+    if (hasUrl) {
+      watchedState.searchForm.errors = {
+        hasUrl,
+      };
+    }
+
+    if (!watchedState.searchForm.valid) {
       return;
     }
 
     watchedState.searchForm.process = 'sending';
 
     try {
-      const { url } = watchedState.searchForm.data;
       const response = await axios.get(`https://hexlet-allorigins.herokuapp.com/get?url=${encodeURIComponent(url)}`);
       const result = parser(response);
 
+      watchedState.chanals.push(result);
       watchedState.searchForm.process = 'finished';
+      watchedState.urls.push(url);
       watchedState.searchForm.data.url = '';
     } catch (error) {
       console.error(errorMessages.network.error);
