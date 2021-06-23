@@ -1,22 +1,19 @@
 import _ from 'lodash';
 import axios from 'axios';
+import locale from './modules/i18next';
 import watcher from './modules/watcher';
-import { validate, errorMessages } from './modules/validate';
-
+import validate from './modules/validate';
 import parser from './modules/parser';
 
 const renderError = (errors) => {
   const feedback = document.querySelector('.feedback');
-  const keys = Object.keys(errors);
-  if (!keys.length) {
+  const errorMessage = Object.values(errors)[0];
+
+  if (!errorMessage) {
     return;
   }
-  const errorTexts = {
-    url: 'Ссылка должна быть валидным URL',
-    rss: 'Ресурс не содержит валидный RSS',
-    hasUrl: 'RSS уже существует',
-  };
-  feedback.innerHTML = errorTexts[keys[0]];
+
+  feedback.innerHTML = errorMessage;
   feedback.classList.add('text-danger');
 };
 
@@ -48,7 +45,7 @@ export default () => {
         buttonSubmit.disabled = true;
         break;
       case 'finished':
-        feedback.innerHTML = 'RSS успешно загружен';
+        feedback.innerHTML = locale.t('RSSUploadedSuccessfully');
         feedback.classList.add('text-success');
         buttonSubmit.disabled = false;
         break;
@@ -73,7 +70,7 @@ export default () => {
     watchedState.searchForm.valid = _.isEqual(errors, {}) && !hasUrl;
 
     if (hasUrl) {
-      renderError({ hasUrl });
+      renderError({ hasUrl: locale.t('RSSAlreadyExist') });
     }
 
     if (!watchedState.searchForm.valid) {
@@ -91,7 +88,7 @@ export default () => {
       watchedState.urls.push(url);
       watchedState.searchForm.data.url = '';
     } catch (error) {
-      console.error(errorMessages.network.error);
+      console.error(locale.t('networkProblems'));
       watchedState.searchForm.process = 'failded';
       throw error;
     }

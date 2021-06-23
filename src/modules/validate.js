@@ -1,17 +1,18 @@
 import * as yup from 'yup';
 import _ from 'lodash';
+import locale from './i18next';
+
+yup.setLocale({
+  string: {
+    url: locale.t('linkMustBeValid'),
+  },
+});
 
 const schema = yup.object().shape({
   url: yup.string().url(),
 });
 
-export const errorMessages = {
-  network: {
-    error: 'Network Problems. Try again.',
-  },
-};
-
-export const validate = (fields) => {
+export default (fields) => {
   try {
     schema.validateSync(fields, {
       abortEarly: false,
