@@ -4,6 +4,7 @@ import locale from './modules/i18next';
 import watcher from './modules/watcher';
 import validate from './modules/validate';
 import parser from './modules/parser';
+import checkUpdate from './modules/checkUpdate';
 
 const renderError = (errors) => {
   const feedback = document.querySelector('.feedback');
@@ -35,6 +36,7 @@ export default () => {
   const input = form.querySelector('input[name="url"]');
   const feedback = document.querySelector('.feedback');
   const buttonSubmit = document.querySelector('button[type="submit"]');
+  let checkUpdateTimerId;
 
   const processHandler = (processValue) => {
     switch (processValue) {
@@ -62,9 +64,10 @@ export default () => {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    clearTimeout(checkUpdateTimerId);
     const errors = validate(state.searchForm.data);
     const { url } = watchedState.searchForm.data;
-    const hasUrl = watchedState.urls.includes(url);
+    const hasUrl = Object.values(watchedState.urls).includes(url);
 
     watchedState.searchForm.errors = errors;
     watchedState.searchForm.valid = _.isEqual(errors, {}) && !hasUrl;
@@ -82,14 +85,18 @@ export default () => {
     try {
       const response = await axios.get(`https://hexlet-allorigins.herokuapp.com/get?url=${encodeURIComponent(url)}`);
       const result = parser(response);
+      const id = _.uniqueId();
 
-      watchedState.chanals.push(result);
-      watchedState.searchForm.process = 'finished';
-      watchedState.urls.push(url);
+      watchedState.chanals[id] = result;
+      watchedState.urls[id] = url;
       watchedState.searchForm.data.url = '';
+      watchedState.searchForm.process = 'finished';
+
+      checkUpdateTimerId = checkUpdate(watchedState);
     } catch (error) {
       console.error(locale.t('networkProblems'));
       watchedState.searchForm.process = 'failded';
+
       throw error;
     }
   });
