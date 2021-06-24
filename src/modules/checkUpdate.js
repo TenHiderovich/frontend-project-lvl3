@@ -19,8 +19,8 @@ const checkUpdate = async (state) => {
         const response = await axios.get(`https://hexlet-allorigins.herokuapp.com/get?url=${encodeURIComponent(`${urlValue}?length=${length}`)}`);
         const result = parser(response);
 
-        if (chanals[id].posts.length < result.posts.length) {
-          state.chanals[id].posts = result.posts;
+        if (chanals.posts[id].length < result.posts.length) {
+          state.chanals.posts[id] = result.posts;
         }
       } catch (error) {
         console.error(locale.t('networkProblems'));

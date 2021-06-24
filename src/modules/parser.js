@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default (response) => {
   const parser = new DOMParser();
   const { contents } = response.data;
@@ -14,6 +16,7 @@ export default (response) => {
     const postLink = post.querySelector('link');
 
     return {
+      id: _.uniqueId('post'),
       title: postTitle.textContent,
       description: postDescription.textContent,
       link: postLink.textContent,

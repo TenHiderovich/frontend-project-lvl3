@@ -1,7 +1,8 @@
 {
     "linkMustBeValid": "Ссылка должна быть валидным URL",
     "notValidRSS": "Ресурс не содержит валидный RSS",
-    "RSSAlreadyExist": "RSS уже существует",
+    "urlAlreadyExist": "RSS уже существует",
     "RSSUploadedSuccessfully": "RSS успешно загружен",
-    "networkProblems": "Проблемы с сетью, попробуйте позже"
+    "networkProblems": "Проблемы с сетью, попробуйте позже",
+    "viewing": "Просмотр"
 }

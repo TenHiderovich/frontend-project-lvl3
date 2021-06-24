@@ -6,17 +6,7 @@ import validate from './modules/validate';
 import parser from './modules/parser';
 import checkUpdate from './modules/checkUpdate';
 
-const renderError = (errors) => {
-  const feedback = document.querySelector('.feedback');
-  const errorMessage = Object.values(errors)[0];
-
-  if (!errorMessage) {
-    return;
-  }
-
-  feedback.innerHTML = errorMessage;
-  feedback.classList.add('text-danger');
-};
+import renderError from './view/renderError';
 
 export default () => {
   const state = {
@@ -29,7 +19,10 @@ export default () => {
       errors: {},
       process: 'filling',
     },
-    chanals: [],
+    chanals: {
+      posts: [],
+      feeds: [],
+    },
   };
 
   const form = document.querySelector('.rss-form');
@@ -65,15 +58,16 @@ export default () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearTimeout(checkUpdateTimerId);
-    const errors = validate(state.searchForm.data);
+
     const { url } = watchedState.searchForm.data;
+    const errors = validate(state.searchForm.data);
     const hasUrl = Object.values(watchedState.urls).includes(url);
 
     watchedState.searchForm.errors = errors;
     watchedState.searchForm.valid = _.isEqual(errors, {}) && !hasUrl;
 
     if (hasUrl) {
-      renderError({ hasUrl: locale.t('RSSAlreadyExist') });
+      renderError({ hasUrl: locale.t('urlAlreadyExist') });
     }
 
     if (!watchedState.searchForm.valid) {
@@ -84,10 +78,14 @@ export default () => {
 
     try {
       const response = await axios.get(`https://hexlet-allorigins.herokuapp.com/get?url=${encodeURIComponent(url)}`);
-      const result = parser(response);
+      const { title, description, posts } = parser(response);
       const id = _.uniqueId();
 
-      watchedState.chanals[id] = result;
+      watchedState.chanals.posts[id] = posts;
+      watchedState.chanals.feeds[id] = {
+        title,
+        description,
+      };
       watchedState.urls[id] = url;
       watchedState.searchForm.data.url = '';
       watchedState.searchForm.process = 'finished';
