@@ -1,4 +1,10 @@
 import _ from 'lodash';
+import locale from './i18next';
+
+function ValidRSSError(message) {
+  this.message = message;
+  this.name = 'notValidRSS';
+}
 
 export default (response) => {
   const parser = new DOMParser();
@@ -6,6 +12,11 @@ export default (response) => {
 
   const document = parser.parseFromString(contents, 'text/xml');
   const channel = document.querySelector('channel');
+
+  if (!channel) {
+    throw new ValidRSSError(locale.t('notValidRSS'));
+  }
+
   const channelTitle = channel.querySelector('title');
   const channelDescription = channel.querySelector('description');
   const channelPosts = channel.querySelectorAll('item');

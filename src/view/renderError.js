@@ -1,11 +1,10 @@
-export default (errors) => {
+export default (message) => {
   const feedback = document.querySelector('.feedback');
-  const errorMessage = Object.values(errors)[0];
 
-  if (!errorMessage) {
+  if (!message) {
     return;
   }
 
-  feedback.innerHTML = errorMessage;
+  feedback.innerHTML = message;
   feedback.classList.add('text-danger');
 };

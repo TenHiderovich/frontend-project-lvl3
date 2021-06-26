@@ -3,13 +3,16 @@ import _ from 'lodash';
 import locale from './i18next';
 
 yup.setLocale({
+  mixed: {
+    required: locale.t('notToBeEmpty'),
+  },
   string: {
-    url: locale.t('linkMustBeValid'),
+    url: locale.t('urlMustBeValid'),
   },
 });
 
 const schema = yup.object().shape({
-  url: yup.string().url(),
+  url: yup.string().required().url(),
 });
 
 export default (fields) => {

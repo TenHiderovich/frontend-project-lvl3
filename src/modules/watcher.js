@@ -2,10 +2,6 @@ import onChange from 'on-change';
 import renderPosts from '../view/renderPosts';
 import renderFeeds from '../view/renderFeeds';
 
-const ON_CNAHGE_OPTIONS = {
-  pathAsArray: true,
-};
-
 export default (state, processHandler, renderError) => onChange(state, (path, value) => {
   const feedback = document.querySelector('.feedback');
   const form = document.querySelector('.rss-form');
@@ -24,9 +20,12 @@ export default (state, processHandler, renderError) => onChange(state, (path, va
     case 'searchForm.process':
       processHandler(value);
       break;
-    case 'searchForm.errors':
-      renderError(value);
+    case 'searchForm.errors': {
+      const error = Object.values(value)[0];
+      const { message } = error;
+      renderError(message);
       break;
+    }
     case 'searchForm.valid':
       if (value) {
         feedback.innerHTML = '';
@@ -41,4 +40,4 @@ export default (state, processHandler, renderError) => onChange(state, (path, va
     default:
       break;
   }
-}, ON_CNAHGE_OPTIONS);
+});

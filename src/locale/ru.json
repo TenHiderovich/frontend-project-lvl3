@@ -1,8 +1,9 @@
 {
-    "linkMustBeValid": "Ссылка должна быть валидным URL",
+    "urlMustBeValid": "Ссылка должна быть валидным URL",
+    "notToBeEmpty": "Не должно быть пустым",
     "notValidRSS": "Ресурс не содержит валидный RSS",
     "urlAlreadyExist": "RSS уже существует",
-    "RSSUploadedSuccessfully": "RSS успешно загружен",
-    "networkProblems": "Проблемы с сетью, попробуйте позже",
-    "viewing": "Просмотр"
+    "urlUploadedSuccessfully": "RSS успешно загружен",
+    "viewing": "Просмотр",
+    "networkError": "Ошибка сети"
 }

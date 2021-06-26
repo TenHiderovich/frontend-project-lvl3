@@ -40,8 +40,9 @@ export default () => {
         buttonSubmit.disabled = true;
         break;
       case 'finished':
-        feedback.innerHTML = locale.t('RSSUploadedSuccessfully');
+        feedback.innerHTML = locale.t('urlUploadedSuccessfully');
         feedback.classList.add('text-success');
+        feedback.classList.remove('text-danger');
         buttonSubmit.disabled = false;
         break;
       default:
@@ -59,15 +60,19 @@ export default () => {
     e.preventDefault();
     clearTimeout(checkUpdateTimerId);
 
-    const { url } = watchedState.searchForm.data;
+    const { url } = state.searchForm.data;
     const errors = validate(state.searchForm.data);
-    const hasUrl = Object.values(watchedState.urls).includes(url);
+    const hasUrl = Object.values(state.urls).includes(url);
+    const hasErrors = !_.isEqual(errors, {});
 
-    watchedState.searchForm.errors = errors;
-    watchedState.searchForm.valid = _.isEqual(errors, {}) && !hasUrl;
+    watchedState.searchForm.valid = !hasErrors && !hasUrl;
+
+    if (hasErrors) {
+      watchedState.searchForm.errors = errors;
+    }
 
     if (hasUrl) {
-      renderError({ hasUrl: locale.t('urlAlreadyExist') });
+      renderError(locale.t('urlAlreadyExist'));
     }
 
     if (!watchedState.searchForm.valid) {
@@ -92,8 +97,15 @@ export default () => {
 
       checkUpdateTimerId = checkUpdate(watchedState);
     } catch (error) {
-      console.error(locale.t('networkProblems'));
       watchedState.searchForm.process = 'failded';
+
+      switch (error.name) {
+        case 'notValidRSS':
+          await renderError(error.message);
+          break;
+        default:
+          console.error(locale.t('networkError'));
+      }
 
       throw error;
     }

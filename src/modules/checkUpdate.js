@@ -6,8 +6,6 @@ import parser from './parser';
 // http://lorem-rss.herokuapp.com/feed?unit=second&interval=30
 // http://lorem-rss.herokuapp.com/feed?length=42
 
-const length = 10;
-
 const checkUpdate = async (state) => {
   const { urls, chanals } = state;
 
@@ -16,14 +14,14 @@ const checkUpdate = async (state) => {
       const [id, urlValue] = url;
 
       try {
-        const response = await axios.get(`https://hexlet-allorigins.herokuapp.com/get?url=${encodeURIComponent(`${urlValue}?length=${length}`)}`);
+        const response = await axios.get(`https://hexlet-allorigins.herokuapp.com/get?url=${encodeURIComponent(urlValue)}`);
         const result = parser(response);
 
         if (chanals.posts[id].length < result.posts.length) {
           state.chanals.posts[id] = result.posts;
         }
       } catch (error) {
-        console.error(locale.t('networkProblems'));
+        console.error(locale.t('networkError'));
 
         throw error;
       }
